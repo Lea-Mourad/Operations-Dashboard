@@ -1,0 +1,59 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Event {
+  id                 String            @id @default(cuid())
+  source_event_id    String            @unique
+  source             String
+  event_type         String
+  payload            Json
+  status             String
+  created_at         DateTime          @default(now())
+  updated_at         DateTime          @updatedAt
+  actions            Action[]
+  review_queue_items ReviewQueueItem[]
+  audit_logs         AuditLog[]
+}
+
+model Action {
+  id         String   @id @default(cuid())
+  event_id   String
+  type       String
+  payload    Json
+  status     String
+  created_at DateTime @default(now())
+  event      Event    @relation(fields: [event_id], references: [id], onDelete: Cascade)
+
+  @@index([event_id])
+}
+
+model ReviewQueueItem {
+  id               String    @id @default(cuid())
+  event_id         String
+  reason           String
+  status           String
+  resolution_notes String?
+  created_at       DateTime  @default(now())
+  resolved_at      DateTime?
+  event            Event     @relation(fields: [event_id], references: [id], onDelete: Cascade)
+
+  @@index([event_id])
+  @@index([status])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  event_id   String
+  message    String
+  metadata   Json?
+  created_at DateTime @default(now())
+  event      Event    @relation(fields: [event_id], references: [id], onDelete: Cascade)
+
+  @@index([event_id])
+}
