@@ -122,13 +122,13 @@ export default function DashboardPage() {
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
-              Operations Command Center
+              Operations
             </p>
             <h1 className="mt-3 text-4xl font-semibold tracking-tight text-[var(--text)]">
-              A calmer view of daily operations
+              Operations overview
             </h1>
             <p className="mt-4 max-w-2xl text-[15px] leading-7 text-[var(--text-secondary)]">
-              Keep an eye on workflow intake, exceptions, and recent activity without getting pulled into raw system detail unless you need it.
+              See recent activity, check outcomes, and step in only when something needs attention.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -171,6 +171,30 @@ export default function DashboardPage() {
           value={state.loading ? "..." : String(failed)}
           helper="Workflow failures across streams"
           accent="red"
+        />
+      </section>
+
+      <section className="grid gap-4 lg:grid-cols-3">
+        <SimpleStep
+          number="1"
+          title="Send an event"
+          body="Start from the submit page and use the prefilled forms to send a new event."
+          href="/submit"
+          linkLabel="Open Submit Event"
+        />
+        <SimpleStep
+          number="2"
+          title="Check the outcome"
+          body="The inbox shows whether an event completed, failed, or needs review. Open any event to see what happened."
+          href="/events"
+          linkLabel="Open Event Inbox"
+        />
+        <SimpleStep
+          number="3"
+          title="Fix blocked items"
+          body="If something cannot be handled safely, it lands in the review queue where you can fix and reprocess it."
+          href="/reviews"
+          linkLabel="Open Review Queue"
         />
       </section>
 
@@ -295,6 +319,35 @@ export default function DashboardPage() {
         </div>
       </section>
     </div>
+  );
+}
+
+function SimpleStep({
+  number,
+  title,
+  body,
+  href,
+  linkLabel,
+}: {
+  number: string;
+  title: string;
+  body: string;
+  href: string;
+  linkLabel: string;
+}) {
+  return (
+    <section className="rounded-[20px] border border-[var(--border)] bg-white p-6 shadow-[0_10px_26px_-26px_rgba(15,23,42,0.9)]">
+      <div className="flex items-center gap-3">
+        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--surface-muted)] text-sm font-semibold text-[var(--text)]">
+          {number}
+        </span>
+        <h2 className="text-lg font-semibold text-[var(--text)]">{title}</h2>
+      </div>
+      <p className="mt-4 text-sm leading-6 text-[var(--text-secondary)]">{body}</p>
+      <Link href={href} className="mt-4 inline-flex text-sm font-medium text-[#2563eb]">
+        {linkLabel}
+      </Link>
+    </section>
   );
 }
 

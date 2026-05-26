@@ -64,17 +64,20 @@ export default function EventDetailPage({ eventId }: { eventId: string }) {
   const payloadDisplay = getEventPayloadDisplay(event);
 
   return (
-    <div className="space-y-6">
-      <section className="rounded-[10px] border border-[var(--border)] bg-white p-6">
+    <div className="space-y-8">
+      <section className="rounded-[24px] border border-[var(--border)] bg-white p-8 shadow-[0_14px_34px_-30px_rgba(15,23,42,0.9)]">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
               Event Detail
             </p>
-            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[var(--text)]">
-              {event.event_type}
+            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-[var(--text)]">
+              Here’s what happened with this event
             </h1>
-            <code className="mt-3 inline-flex rounded bg-[#f3f4f6] px-2 py-1 font-mono text-xs text-[var(--text-secondary)]">
+            <p className="mt-3 text-[15px] leading-7 text-[var(--text-secondary)]">
+              Use this page to see what came in, what the system did, and whether anyone had to step in.
+            </p>
+            <code className="mt-4 inline-flex rounded bg-[#f3f4f6] px-2 py-1 font-mono text-xs text-[var(--text-secondary)]">
               {event.source_event_id}
             </code>
           </div>
@@ -84,7 +87,7 @@ export default function EventDetailPage({ eventId }: { eventId: string }) {
 
       <section className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
         <div className="space-y-6">
-          <Card title="Event Information">
+          <Card title="What came in">
             <div className="grid gap-4 md:grid-cols-2">
               <MetaStat label="Source event ID" value={event.source_event_id} code />
               <MetaStat label="Workflow" value={getWorkflowLabel(event)} />
@@ -96,7 +99,7 @@ export default function EventDetailPage({ eventId }: { eventId: string }) {
           </Card>
 
           {reviewItem ? (
-            <Card title="Review reason">
+            <Card title="Why it needed attention">
               <div className="rounded-[10px] border border-[#fde68a] bg-[#fffbeb] px-4 py-3">
                 <p className="text-sm font-medium text-[#b45309]">{reviewItem.reason}</p>
                 {reviewItem.resolution_notes ? (
@@ -108,7 +111,7 @@ export default function EventDetailPage({ eventId }: { eventId: string }) {
             </Card>
           ) : null}
 
-          <Card title="Payload Details">
+          <Card title="Event details">
             <div className="grid gap-4 md:grid-cols-2">
               {payloadDisplay.fields.map((field) => (
                 <MetaStat key={field.label} label={field.label} value={field.value} />
@@ -159,7 +162,7 @@ export default function EventDetailPage({ eventId }: { eventId: string }) {
         </div>
 
         <div className="space-y-6">
-          <Card title="Generated actions">
+          <Card title="What the system did">
             {event.actions.length === 0 ? (
               <div className="rounded-[10px] border border-dashed border-[var(--border)] bg-[#fafafa] px-5 py-8 text-sm text-[var(--text-secondary)]">
                 No actions were generated for this event.
@@ -200,7 +203,7 @@ export default function EventDetailPage({ eventId }: { eventId: string }) {
             )}
           </Card>
 
-          <Card title="Audit timeline">
+          <Card title="History">
             <AuditTimeline items={event.audit_logs} />
           </Card>
         </div>

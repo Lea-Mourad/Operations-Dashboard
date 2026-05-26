@@ -61,16 +61,16 @@ export default function AuditTrailPage() {
   }, [auditItems, searchTerm, sourceFilter]);
 
   return (
-    <div className="space-y-6">
-      <section className="rounded-[10px] border border-[var(--border)] bg-white p-6">
+    <div className="space-y-8">
+      <section className="rounded-[24px] border border-[var(--border)] bg-white p-8 shadow-[0_14px_34px_-30px_rgba(15,23,42,0.9)]">
         <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
           Audit Trail
         </p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[var(--text)]">
-          Workflow audit log
+        <h1 className="mt-3 text-4xl font-semibold tracking-tight text-[var(--text)]">
+          A simple timeline of what the system has done
         </h1>
-        <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--text-secondary)]">
-          Review readable audit messages, timestamps, related event IDs, and workflow context across all operational streams.
+        <p className="mt-4 max-w-2xl text-[15px] leading-7 text-[var(--text-secondary)]">
+          Use this page when you want the history only. It shows the sequence of system activity without opening each event one by one.
         </p>
       </section>
 

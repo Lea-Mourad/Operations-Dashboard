@@ -160,7 +160,7 @@ export default function ReviewQueuePage() {
           result.event.status === "completed"
             ? "Event reprocessed successfully."
             : result.event.status === "failed"
-              ? "Reprocessing failed and remains auditable."
+              ? "Reprocessing failed and the result was saved to the event history."
               : "Reprocessing still requires review.",
       });
     } catch (error) {
@@ -171,16 +171,16 @@ export default function ReviewQueuePage() {
   }
 
   return (
-    <div className="space-y-6">
-      <section className="rounded-[10px] border border-[var(--border)] bg-white p-6">
+    <div className="space-y-8">
+      <section className="rounded-[24px] border border-[var(--border)] bg-white p-8 shadow-[0_14px_34px_-30px_rgba(15,23,42,0.9)]">
         <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
           Review Queue
         </p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[var(--text)]">
-          Exceptions requiring operator action
+        <h1 className="mt-3 text-4xl font-semibold tracking-tight text-[var(--text)]">
+          Review and fix blocked events
         </h1>
-        <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--text-secondary)]">
-          Fix invalid payloads, re-run workflow processing, or resolve items manually while preserving the full audit trail.
+        <p className="mt-4 max-w-2xl text-[15px] leading-7 text-[var(--text-secondary)]">
+          When an event cannot be completed safely, it shows up here. In most cases, you can correct the fields and run the same event again.
         </p>
       </section>
 
@@ -223,8 +223,8 @@ export default function ReviewQueuePage() {
           return (
             <section
               key={item.id}
-              className="rounded-[10px] border border-[var(--border)] bg-white p-5"
-            >
+            className="rounded-[20px] border border-[var(--border)] bg-white p-6 shadow-[0_10px_26px_-26px_rgba(15,23,42,0.9)]"
+          >
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
                   <p className="text-sm font-medium text-[var(--text)]">
@@ -251,17 +251,17 @@ export default function ReviewQueuePage() {
                 <SummaryStat label="Event status" value={item.event.status} />
               </div>
 
-              <div className="mt-4 rounded-[10px] border border-[var(--border)] bg-[#f9fafb] px-4 py-3">
+              <div className="mt-4 rounded-[14px] border border-[var(--border)] bg-[var(--surface-muted)] px-4 py-3">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
-                  Operator correction
+                  What to do here
                 </p>
                 <p className="mt-2 text-sm text-[var(--text-secondary)]">
-                  Edit the payload fields below, then reprocess the same event without creating a duplicate record.
+                  Fix the fields below, then use the blue button to re-run this same event. The system will keep the history and avoid creating a duplicate.
                 </p>
               </div>
 
               {isEditing ? (
-                <div className="mt-4 space-y-4 rounded-[10px] border border-[var(--border)] bg-[#fafafa] p-4">
+                <div className="mt-4 space-y-4 rounded-[14px] border border-[var(--border)] bg-[var(--surface-muted)] p-5">
                   <ReviewPayloadEditor
                     item={item}
                     form={form}
@@ -330,14 +330,14 @@ export default function ReviewQueuePage() {
                   Open event
                 </Link>
 
-                <button
-                  type="button"
-                  onClick={() => handleResolve(item)}
-                  disabled={resolvingId === item.id}
-                  className="rounded-[7px] border border-[#bbf7d0] bg-[#f0fdf4] px-4 py-2 text-sm font-medium text-[#15803d] disabled:opacity-60"
-                >
-                  {resolvingId === item.id ? "Resolving..." : "Resolve without reprocessing"}
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => handleResolve(item)}
+                    disabled={resolvingId === item.id}
+                    className="rounded-[7px] border border-[#bbf7d0] bg-[#f0fdf4] px-4 py-2 text-sm font-medium text-[#15803d] disabled:opacity-60"
+                  >
+                    {resolvingId === item.id ? "Resolving..." : "Resolve manually"}
+                  </button>
               </div>
             </section>
           );

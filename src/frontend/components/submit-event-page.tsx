@@ -80,23 +80,29 @@ export default function SubmitEventPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <section className="rounded-[10px] border border-[var(--border)] bg-white p-6">
+    <div className="space-y-8">
+      <section className="rounded-[24px] border border-[var(--border)] bg-white p-8 shadow-[0_14px_34px_-30px_rgba(15,23,42,0.9)]">
         <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
           Submit Event
         </p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[var(--text)]">
-          Guided workflow submission
+        <h1 className="mt-3 text-4xl font-semibold tracking-tight text-[var(--text)]">
+          Create a new event
         </h1>
-        <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--text-secondary)]">
-          Submit structured operational events through compact guided forms. Advanced JSON mode remains available as a secondary operator tool for edge cases.
+        <p className="mt-4 max-w-2xl text-[15px] leading-7 text-[var(--text-secondary)]">
+          Pick a workflow, fill in the fields, and submit. You will see the result right away, and JSON mode is still there for edge cases.
         </p>
       </section>
 
+      <section className="grid gap-4 md:grid-cols-3">
+        <MiniStep number="1" title="Choose a workflow" body="Pick FinanceOps, CampaignOps, or GuestOps." />
+        <MiniStep number="2" title="Fill the details" body="The forms include sample values so you can test without much typing." />
+        <MiniStep number="3" title="Review the result" body="After submit, you’ll see the status, actions, and next step." />
+      </section>
+
       <div className="grid gap-6 xl:grid-cols-[280px_1fr]">
-        <section className="rounded-[10px] border border-[var(--border)] bg-white p-4">
+        <section className="rounded-[20px] border border-[var(--border)] bg-white p-5 shadow-[0_10px_26px_-26px_rgba(15,23,42,0.9)]">
           <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
-            Event type
+            Choose a workflow
           </p>
           <div className="grid gap-2">
             {tabs.map((tab) => {
@@ -119,13 +125,13 @@ export default function SubmitEventPage() {
               );
             })}
           </div>
-          <div className="mt-4 rounded-[10px] border border-[var(--border)] bg-[#f9fafb] p-4 text-sm text-[var(--text-secondary)]">
-            Forms are preloaded with realistic sample defaults for fast demos.
+          <div className="mt-4 rounded-[14px] border border-[var(--border)] bg-[var(--surface-muted)] p-4 text-sm text-[var(--text-secondary)]">
+            Tip: the default values let you submit a working example right away.
           </div>
         </section>
 
         <div className="space-y-6">
-          <section className="rounded-[10px] border border-[var(--border)] bg-white p-6">
+          <section className="rounded-[24px] border border-[var(--border)] bg-white p-6 shadow-[0_14px_34px_-30px_rgba(15,23,42,0.9)]">
             {activeTab === "finance" ? (
               <FinanceForm
                 values={finance}
@@ -225,7 +231,7 @@ function FinanceForm({
   return (
     <FormLayout
       title="FinanceOps · Overdue Invoice"
-      description="Create an overdue invoice event and let the workflow engine generate payment reminders and follow-up tasks."
+      description="Use this when a customer has an overdue invoice and the system should create follow-up work automatically."
     >
       <div className="grid gap-4 md:grid-cols-2">
         <TextField label="source_event_id" value={values.source_event_id} onChange={(value) => onChange({ ...values, source_event_id: value })} />
@@ -257,7 +263,7 @@ function CampaignForm({
   return (
     <FormLayout
       title="CampaignOps · Client Brief"
-      description="Capture a client brief and let the backend generate channel-specific campaign work items."
+      description="Use this when a new client brief comes in and each marketing channel needs its own task."
     >
       <div className="grid gap-4 md:grid-cols-2">
         <TextField label="source_event_id" value={values.source_event_id} onChange={(value) => onChange({ ...values, source_event_id: value })} />
@@ -305,7 +311,7 @@ function GuestForm({
   return (
     <FormLayout
       title="GuestOps · Reservation Change"
-      description="Capture a reservation change request with enough booking context for downstream review and messaging."
+      description="Use this when a guest wants to change a reservation and the system should prepare the request and response."
     >
       <div className="grid gap-4 md:grid-cols-2">
         <TextField label="source_event_id" value={values.source_event_id} onChange={(value) => onChange({ ...values, source_event_id: value })} />
@@ -335,7 +341,7 @@ function AdvancedJsonForm({
   return (
     <FormLayout
       title="Advanced JSON mode"
-      description="Use raw JSON only when you need a custom shape or a backend edge-case demo."
+      description="Use raw JSON only for edge cases or backend demos. Most normal testing should go through the guided forms."
     >
       <label className="block">
         <span className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">Raw event JSON</span>
@@ -371,7 +377,7 @@ function SubmissionResult({ state }: { state: SubmitState }) {
     return (
       <section className="rounded-[10px] border border-[var(--border)] bg-white p-5">
         <p className="text-sm text-[var(--text-secondary)]">
-          Submit a guided event to see the operator result panel here.
+          Your result will appear here after you submit an event.
         </p>
       </section>
     );
@@ -387,7 +393,7 @@ function SubmissionResult({ state }: { state: SubmitState }) {
             Submission result
           </p>
           <h2 className="mt-1 text-lg font-semibold text-[var(--text)]">
-            {state.result.duplicate ? "Existing event returned" : "Event accepted by API"}
+            {state.result.duplicate ? "We found the existing event" : "Your event was received"}
           </h2>
         </div>
         <StatusBadge status={event.status} />
@@ -478,13 +484,35 @@ function FormLayout({
     <div className="space-y-5">
       <div>
         <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
-          Guided form
+          Current form
         </p>
         <h2 className="mt-1 text-xl font-semibold text-[var(--text)]">{title}</h2>
         <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--text-secondary)]">{description}</p>
       </div>
       {children}
     </div>
+  );
+}
+
+function MiniStep({
+  number,
+  title,
+  body,
+}: {
+  number: string;
+  title: string;
+  body: string;
+}) {
+  return (
+    <section className="rounded-[18px] border border-[var(--border)] bg-white p-5 shadow-[0_10px_26px_-26px_rgba(15,23,42,0.9)]">
+      <div className="flex items-center gap-3">
+        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--surface-muted)] text-sm font-semibold text-[var(--text)]">
+          {number}
+        </span>
+        <h2 className="text-base font-semibold text-[var(--text)]">{title}</h2>
+      </div>
+      <p className="mt-3 text-sm leading-6 text-[var(--text-secondary)]">{body}</p>
+    </section>
   );
 }
 

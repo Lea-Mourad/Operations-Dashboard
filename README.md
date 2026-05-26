@@ -1,214 +1,148 @@
 # Operations Command Center
 
-A full-stack operational workflow dashboard built for the Operations Command Center take-home exercise.
+This is my take-home submission for the Operations Command Center prompt.
 
-The application simulates an internal operations platform that receives events from multiple business systems, generates workflow actions, routes risky cases to human review, and preserves a complete audit trail.
+I built it as a small operations app with a separate frontend and backend:
+- `src/frontend` holds the Next.js UI
+- `src/backend` holds the Express API
+- Prisma + SQLite handle persistence
 
-The project was designed around a shared workflow engine with adapter-based stream handling instead of building separate disconnected flows.
+The core idea is a shared workflow engine with stream-specific adapters, so FinanceOps, CampaignOps, and GuestOps all go through the same processing flow instead of being treated as unrelated forms.
 
----
+## What the app does
 
-# Features
+- accepts events from FinanceOps, CampaignOps, and GuestOps
+- validates the incoming shape and required fields
+- routes each event to the correct workflow adapter
+- generates actions based on the event type
+- runs mock external services
+- writes events, actions, review items, and audit logs to SQLite
+- prevents duplicate processing by `source_event_id`
+- sends unsupported or incomplete events to the review queue
 
-## Operational Dashboard
-- Workflow metrics
-- Event status overview
-- Failed/review-required monitoring
-- Recent operational activity
-- Audit visibility
+## Main screens
 
-## Submit Event
-Guided operational forms for:
-- FinanceOps
-- CampaignOps
-- GuestOps
+- `Dashboard` for the high-level view
+- `Submit Event` for guided event submission
+- `Event Inbox` for all saved events
+- `Review Queue` for blocked items that need operator input
+- `Audit Trail` for event history
+- `Event Detail` for the full record of one event
 
-Also includes:
-- advanced JSON mode
-- simulated external failure testing
-- inline workflow result preview
+## Workflow coverage
 
-## Event Inbox
-- Filterable operational event table
-- Workflow statuses
-- Event detail access
-- Audit visibility
-- Duplicate-safe event handling
+### FinanceOps
+Supports `invoice.overdue`.
 
-## Human Review Queue
-- Review-required workflow handling
-- Payload correction + reprocessing
-- Manual operator resolution
-- Resolution notes
-- Human-in-the-loop workflow recovery
+It creates:
+- a payment reminder
+- a follow-up task
 
-## Event Detail View
-- Workflow lifecycle visibility
-- Generated action rendering
-- Payload details
-- Audit timeline
-- Action execution state
+Priority is marked `high` when `days_overdue > 14`, otherwise `normal`.
 
-## Audit Trail
-- Historical workflow activity
-- Event lifecycle tracking
-- Operational visibility across all events
+### CampaignOps
+Supports `client_brief.received`.
 
----
+It creates one campaign task per channel and carries the deadline through to each task.
 
-# Workflow Lifecycle
+### GuestOps
+Supports `reservation.change_requested`.
 
-Each incoming event follows a shared workflow pipeline:
+It creates:
+- a reservation change action
+- a guest confirmation message
 
-1. Event intake
-2. Validation
-3. Stream detection
-4. Workflow adapter execution
-5. Action generation
-6. Mock service execution
-7. Persistence + audit logging
-8. Human review fallback if required
+If key reservation fields are missing, the event goes to review instead of being completed automatically.
 
-The workflow engine is adapter-based so additional operational streams can be added without changing the shared orchestration flow.
+## Review and reprocessing
 
----
+If an event cannot be completed safely, it moves to the review queue.
 
-# Supported Workflow Streams
+From there, an operator can:
+- resolve it manually with notes
+- edit the payload
+- reprocess the same event without creating a duplicate record
 
-## FinanceOps — Overdue Invoice
+When reprocessing succeeds, the event is completed, new actions are saved, and the review item is resolved. If it still cannot be completed, it stays in review with updated history.
 
-Handles:
-- overdue invoice workflows
-- payment reminder generation
-- finance follow-up tasks
+## Running the project
 
-Features:
-- priority escalation (`high` vs `normal`)
-- audit logging
-- review fallback
-- execution failure handling
+Install dependencies:
 
-Generated actions:
-- payment reminders
-- finance follow-up tasks
+```bash
+npm install
+```
 
----
+Create or update the local database:
 
-## CampaignOps — Client Brief Received
+```bash
+npx prisma migrate dev
+```
 
-Handles:
-- client campaign intake
-- multi-channel campaign workflows
-- operational task generation
+Start both apps:
 
-Features:
-- one task generated per campaign channel
-- channel-aware task naming
-- deadline propagation
+```bash
+npm run dev
+```
 
-Generated actions:
-- campaign tasks
-- optional QA workflow support
+URLs:
+- frontend: `http://localhost:3000`
+- backend: `http://localhost:4000`
 
----
+## Helpful commands
 
-## GuestOps — Reservation Change Request
+Run frontend only:
 
-Handles:
-- reservation change requests
-- guest communication workflows
-- reservation validation
+```bash
+npm run dev:frontend
+```
 
-Features:
-- guest-facing confirmation generation
-- validation-based review escalation
-- human correction + reprocessing
+Run backend only:
 
-Generated actions:
-- reservation change requests
-- guest confirmation messages
+```bash
+npm run dev:backend
+```
 
----
+Run tests:
 
-# Human Review Flow
+```bash
+npm test
+```
 
-Invalid, ambiguous, unsupported, or manually corrected events are routed into a human review queue.
+Build the frontend:
 
-Operators can:
-- inspect original events
-- edit invalid payload fields
-- reprocess events
-- resolve review items
-- preserve a full audit trail during the workflow lifecycle
+```bash
+npm run build
+```
 
-If reprocessing succeeds:
-- the event transitions to `completed`
-- generated actions are persisted
-- the review item is resolved automatically
+Open the database in Prisma Studio:
 
----
+```bash
+npx prisma studio
+```
 
-# Event Status Lifecycle
+## Data persistence
 
-| Status | Meaning |
-|---|---|
-| `received` | Event accepted and stored |
-| `processing` | Workflow execution in progress |
-| `completed` | Workflow and actions executed successfully |
-| `review_required` | Human intervention required |
-| `failed` | Valid workflow but execution failed |
+App data is stored in:
 
-Important distinction:
+`prisma/dev.db`
 
-- `review_required` means the system could not safely determine automation behavior.
-- `failed` means the workflow was valid, but execution failed during processing.
+I set it up so normal development keeps your data:
+- `npm run dev` does not clear the database
+- `npm run db:seed` only adds sample records if they are missing
+- `npm test` preserves the local database by backing it up and restoring it after the test run
 
----
+## API endpoints
 
-# Architecture
+- `POST /api/events/submit`
+- `GET /api/events`
+- `GET /api/events/:id`
+- `GET /api/dashboard`
+- `GET /api/reviews`
+- `POST /api/reviews/:id/resolve`
+- `POST /api/reviews/:id/reprocess`
+- `GET /api/audit`
 
-The application is intentionally split into separate frontend and backend layers.
+## Notes
 
-## Frontend
-- Next.js
-- React
-- TypeScript
-- Component-based UI architecture
-
-## Backend
-- Express
-- Prisma
-- SQLite
-- Shared workflow orchestration engine
-- Adapter-based workflow execution
-
-## Persistence
-- Prisma ORM
-- SQLite local database
-
----
-
-# Project Structure
-
-```text
-src/
-  backend/
-    app.js
-    server.js
-    routes/
-    controllers/
-    middleware/
-    services/
-    workflows/
-    repositories/
-    db/
-
-  frontend/
-    app/
-    components/
-    hooks/
-    lib/
-    types/
-
-prisma/
-tests/
+I kept the backend logic and workflow behavior separate from the UI so the frontend only talks to the API. That made it easier to clean up the UX without changing how events are processed.
