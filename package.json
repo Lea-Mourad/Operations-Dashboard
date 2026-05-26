@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "next dev",
+    "dev:backend": "nodemon src/backend/server.js",
     "build": "next build",
     "start": "next start",
     "db:generate": "prisma generate",
@@ -13,10 +15,12 @@
     "test:watch": "vitest"
   },
   "prisma": {
-    "seed": "node --import tsx prisma/seed.ts"
+    "seed": "node prisma/seed.js"
   },
   "dependencies": {
     "@prisma/client": "^6.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.1",
     "next": "^15.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
@@ -26,6 +30,8 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "autoprefixer": "^10.4.0",
+    "concurrently": "^9.1.0",
+    "nodemon": "^3.1.7",
     "postcss": "^8.4.0",
     "prisma": "^6.0.0",
     "tailwindcss": "^3.4.0",

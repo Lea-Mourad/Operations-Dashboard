@@ -9,7 +9,13 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "."),
+      "@/components": path.resolve(
+        __dirname,
+        "./src/frontend/components",
+      ),
+      "@/lib": path.resolve(__dirname, "./src/frontend/lib"),
+      "@/types": path.resolve(__dirname, "./src/frontend/types"),
+      "@": path.resolve(__dirname, "./src/frontend"),
     },
   },
 });
