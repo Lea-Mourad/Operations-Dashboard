@@ -1,30 +1,194 @@
 # Operations Command Center
 
-This is my take on the Operations Command Center assignment.
+A full-stack operational workflow dashboard built for the Operations Command Center take-home exercise.
 
-I built it as a separated frontend/backend app:
-- `Next.js` for the frontend
-- `Express` for the backend API
-- `Prisma + SQLite` for persistence
+The application simulates an internal operations platform that receives events from multiple business systems, generates workflow actions, routes risky cases to human review, and preserves a complete audit trail.
 
-The goal was to keep the workflow logic shared and adapter-based instead of building three unrelated flows.
+The project was designed around a shared workflow engine with adapter-based stream handling instead of building separate disconnected flows.
 
-## What’s in the app
+---
 
-- Dashboard
-- Submit Event
-- Event Inbox
-- Review Queue
-- Audit Trail
-- Event Detail view
+# Features
 
-The backend currently handles:
-- FinanceOps overdue invoices
-- CampaignOps client briefs
-- GuestOps reservation change requests
-- review-required fallbacks for invalid, unsupported, or failed events
+## Operational Dashboard
+- Workflow metrics
+- Event status overview
+- Failed/review-required monitoring
+- Recent operational activity
+- Audit visibility
 
-## Project structure
+## Submit Event
+Guided operational forms for:
+- FinanceOps
+- CampaignOps
+- GuestOps
+
+Also includes:
+- advanced JSON mode
+- simulated external failure testing
+- inline workflow result preview
+
+## Event Inbox
+- Filterable operational event table
+- Workflow statuses
+- Event detail access
+- Audit visibility
+- Duplicate-safe event handling
+
+## Human Review Queue
+- Review-required workflow handling
+- Payload correction + reprocessing
+- Manual operator resolution
+- Resolution notes
+- Human-in-the-loop workflow recovery
+
+## Event Detail View
+- Workflow lifecycle visibility
+- Generated action rendering
+- Payload details
+- Audit timeline
+- Action execution state
+
+## Audit Trail
+- Historical workflow activity
+- Event lifecycle tracking
+- Operational visibility across all events
+
+---
+
+# Workflow Lifecycle
+
+Each incoming event follows a shared workflow pipeline:
+
+1. Event intake
+2. Validation
+3. Stream detection
+4. Workflow adapter execution
+5. Action generation
+6. Mock service execution
+7. Persistence + audit logging
+8. Human review fallback if required
+
+The workflow engine is adapter-based so additional operational streams can be added without changing the shared orchestration flow.
+
+---
+
+# Supported Workflow Streams
+
+## FinanceOps — Overdue Invoice
+
+Handles:
+- overdue invoice workflows
+- payment reminder generation
+- finance follow-up tasks
+
+Features:
+- priority escalation (`high` vs `normal`)
+- audit logging
+- review fallback
+- execution failure handling
+
+Generated actions:
+- payment reminders
+- finance follow-up tasks
+
+---
+
+## CampaignOps — Client Brief Received
+
+Handles:
+- client campaign intake
+- multi-channel campaign workflows
+- operational task generation
+
+Features:
+- one task generated per campaign channel
+- channel-aware task naming
+- deadline propagation
+
+Generated actions:
+- campaign tasks
+- optional QA workflow support
+
+---
+
+## GuestOps — Reservation Change Request
+
+Handles:
+- reservation change requests
+- guest communication workflows
+- reservation validation
+
+Features:
+- guest-facing confirmation generation
+- validation-based review escalation
+- human correction + reprocessing
+
+Generated actions:
+- reservation change requests
+- guest confirmation messages
+
+---
+
+# Human Review Flow
+
+Invalid, ambiguous, unsupported, or manually corrected events are routed into a human review queue.
+
+Operators can:
+- inspect original events
+- edit invalid payload fields
+- reprocess events
+- resolve review items
+- preserve a full audit trail during the workflow lifecycle
+
+If reprocessing succeeds:
+- the event transitions to `completed`
+- generated actions are persisted
+- the review item is resolved automatically
+
+---
+
+# Event Status Lifecycle
+
+| Status | Meaning |
+|---|---|
+| `received` | Event accepted and stored |
+| `processing` | Workflow execution in progress |
+| `completed` | Workflow and actions executed successfully |
+| `review_required` | Human intervention required |
+| `failed` | Valid workflow but execution failed |
+
+Important distinction:
+
+- `review_required` means the system could not safely determine automation behavior.
+- `failed` means the workflow was valid, but execution failed during processing.
+
+---
+
+# Architecture
+
+The application is intentionally split into separate frontend and backend layers.
+
+## Frontend
+- Next.js
+- React
+- TypeScript
+- Component-based UI architecture
+
+## Backend
+- Express
+- Prisma
+- SQLite
+- Shared workflow orchestration engine
+- Adapter-based workflow execution
+
+## Persistence
+- Prisma ORM
+- SQLite local database
+
+---
+
+# Project Structure
 
 ```text
 src/
@@ -38,98 +202,13 @@ src/
     workflows/
     repositories/
     db/
+
   frontend/
     app/
     components/
     hooks/
     lib/
     types/
+
 prisma/
 tests/
-```
-
-A small root `app/` folder still exists because Next App Router expects it, but the actual frontend implementation lives under `src/frontend`.
-
-## Run locally
-
-Install dependencies:
-
-```bash
-npm install
-```
-
-Set up the database:
-
-```bash
-npx prisma migrate dev
-```
-
-Start both frontend and backend:
-
-```bash
-npm run dev
-```
-
-Default ports:
-- Frontend: [http://localhost:3000](http://localhost:3000)
-- Backend: [http://localhost:4000](http://localhost:4000)
-
-If one of those ports is already in use, stop the old process first and rerun.
-
-## Environment
-
-Use a local `.env` file like this:
-
-```bash
-DATABASE_URL="file:./dev.db"
-PORT=4000
-FRONTEND_URL="http://localhost:3000"
-NEXT_PUBLIC_API_URL="http://localhost:4000"
-```
-
-## API routes
-
-- `POST /api/events/submit`
-- `GET /api/events`
-- `GET /api/events/:id`
-- `GET /api/dashboard`
-- `GET /api/reviews`
-- `POST /api/reviews/:id/resolve`
-- `POST /api/reviews/:id/reprocess`
-- `GET /api/audit`
-
-## Useful commands
-
-```bash
-npm run db:push
-npm run db:seed
-npm test
-npm run build
-```
-
-## Notes on persistence
-
-The app data lives in [prisma/dev.db](/Users/leamurad/mokeytribe assesment/prisma/dev.db).
-
-Important behavior:
-- `npm run dev` keeps existing data
-- `npm run db:seed` is non-destructive and only inserts the sample events if they are missing
-- `npm test` backs up and restores `prisma/dev.db`, so tests should not wipe app data
-
-## Testing
-
-I added workflow tests around:
-
-1. successful FinanceOps processing
-2. successful CampaignOps processing
-3. successful GuestOps processing
-4. duplicate protection on `source_event_id`
-5. invalid payloads going to review
-6. failed mock execution staying auditable
-7. review queue reprocessing for corrected payloads
-
-## A couple of implementation choices
-
-- I kept Prisma as the persistence layer, but moved the request handling into a real Express backend instead of Next route handlers.
-- The workflow engine is still the center of the backend design. Each stream has its own adapter, but the intake / validation / persistence / audit flow is shared.
-- On the frontend, I tried to keep the UI more operator-friendly than developer-heavy, so raw JSON is mostly hidden behind detail sections instead of being the primary interface.
