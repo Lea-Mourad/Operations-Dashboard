@@ -22,6 +22,9 @@ function countOpen() {
 function findById(id) {
   return prisma.reviewQueueItem.findUnique({
     where: { id },
+    include: {
+      event: true,
+    },
   });
 }
 

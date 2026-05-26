@@ -3,6 +3,7 @@ import type {
   DashboardResponse,
   EventResponse,
   EventsResponse,
+  ReprocessReviewResponse,
   ResolveReviewResponse,
   ReviewsResponse,
   SubmitEventResponse,
@@ -71,6 +72,20 @@ export function resolveReview(id: string, resolutionNotes: string) {
   return fetchJson<ResolveReviewResponse>(`/api/reviews/${id}/resolve`, {
     method: "POST",
     body: JSON.stringify({
+      resolution_notes: resolutionNotes,
+    }),
+  });
+}
+
+export function reprocessReview(
+  id: string,
+  payload: unknown,
+  resolutionNotes: string,
+) {
+  return fetchJson<ReprocessReviewResponse>(`/api/reviews/${id}/reprocess`, {
+    method: "POST",
+    body: JSON.stringify({
+      payload,
       resolution_notes: resolutionNotes,
     }),
   });

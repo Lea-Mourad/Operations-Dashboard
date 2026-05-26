@@ -8,6 +8,7 @@ export type {
   EventResponse,
   EventsResponse,
   JsonValue,
+  ReprocessReviewResponse,
   ResolveReviewResponse,
   ReviewListItem,
   ReviewQueueItemRecord,

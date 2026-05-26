@@ -59,6 +59,7 @@ export type ReviewListItem = {
     source_event_id: string;
     event_type: string;
     status: string;
+    payload: JsonValue;
   };
 };
 
@@ -115,4 +116,9 @@ export type SubmitEventResponse = {
 
 export type ResolveReviewResponse = {
   reviewItem: ReviewListItem;
+};
+
+export type ReprocessReviewResponse = {
+  event: EventRecord;
+  reviewItem: ReviewListItem | null;
 };

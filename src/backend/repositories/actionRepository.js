@@ -8,6 +8,14 @@ function count() {
   return prisma.action.count();
 }
 
+function deleteByEventId(eventId) {
+  return prisma.action.deleteMany({
+    where: {
+      event_id: eventId,
+    },
+  });
+}
+
 function deleteMany() {
   return prisma.action.deleteMany();
 }
@@ -15,5 +23,6 @@ function deleteMany() {
 module.exports = {
   createMany,
   count,
+  deleteByEventId,
   deleteMany,
 };

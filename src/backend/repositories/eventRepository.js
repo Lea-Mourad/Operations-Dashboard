@@ -58,6 +58,13 @@ function updateStatus(id, status) {
   });
 }
 
+function update(id, data) {
+  return prisma.event.update({
+    where: { id },
+    data,
+  });
+}
+
 function getSnapshot(id) {
   return prisma.event.findUniqueOrThrow({
     where: { id },
@@ -94,6 +101,7 @@ module.exports = {
   findBySourceEventId,
   create,
   updateStatus,
+  update,
   getSnapshot,
   groupByStatus,
   groupBySource,

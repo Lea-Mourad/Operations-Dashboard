@@ -3,7 +3,10 @@ import { afterAll, beforeEach, describe, expect, it } from "vitest";
 
 const require = createRequire(import.meta.url);
 const { prisma } = require("../src/backend/db/prisma");
-const { processIncomingEvent } = require("../src/backend/services/workflowEngine");
+const {
+  processIncomingEvent,
+  reprocessReviewItem,
+} = require("../src/backend/services/workflowEngine");
 
 async function resetDatabase() {
   await prisma.auditLog.deleteMany();
@@ -139,7 +142,7 @@ describe("workflow engine", () => {
     );
   });
 
-  it("Simulated external failure goes to review_required and is auditable", async () => {
+  it("Simulated external failure goes to failed and is auditable", async () => {
     const result = await processIncomingEvent({
       source_event_id: "failure-test-001",
       source: "guestops",
@@ -152,7 +155,7 @@ describe("workflow engine", () => {
       },
     });
 
-    expect(result.event.status).toBe("review_required");
+    expect(result.event.status).toBe("failed");
     expect(result.event.review_queue_items).toHaveLength(1);
     expect(result.event.actions.every((action) => action.status === "failed")).toBe(
       true,
@@ -162,5 +165,146 @@ describe("workflow engine", () => {
         log.message.toLowerCase().includes("failed"),
       ),
     ).toBe(true);
+  });
+
+  it("Missing guest_name enters review_required", async () => {
+    const result = await processIncomingEvent({
+      source_event_id: "guest-invalid-001",
+      source: "guestops",
+      event_type: "reservation.change_requested",
+      payload: {
+        reservation_id: "RES-7729",
+        requested_check_in: "2026-06-06",
+        current_check_in: "2026-06-04",
+        nights: 3,
+      },
+    });
+
+    expect(result.event.status).toBe("review_required");
+    expect(result.event.review_queue_items).toHaveLength(1);
+    expect(result.event.review_queue_items[0]?.reason).toContain("guest_name");
+  });
+
+  it("Reprocess with guest_name creates completed event", async () => {
+    const initial = await processIncomingEvent({
+      source_event_id: "guest-reprocess-001",
+      source: "guestops",
+      event_type: "reservation.change_requested",
+      payload: {
+        reservation_id: "RES-7729",
+        requested_check_in: "2026-06-06",
+      },
+    });
+
+    const reviewItem = initial.event.review_queue_items[0];
+
+    const result = await reprocessReviewItem(
+      reviewItem.id,
+      {
+        reservation_id: "RES-7729",
+        guest_name: "Maya Haddad",
+        current_check_in: "2026-06-04",
+        requested_check_in: "2026-06-06",
+        nights: 3,
+      },
+      "Fixed missing guest name",
+    );
+
+    expect(result.event.status).toBe("completed");
+  });
+
+  it("Review item becomes resolved after successful reprocess", async () => {
+    const initial = await processIncomingEvent({
+      source_event_id: "guest-reprocess-002",
+      source: "guestops",
+      event_type: "reservation.change_requested",
+      payload: {
+        reservation_id: "RES-8891",
+        requested_check_in: "2026-06-07",
+      },
+    });
+
+    const reviewItem = initial.event.review_queue_items[0];
+
+    const result = await reprocessReviewItem(
+      reviewItem.id,
+      {
+        reservation_id: "RES-8891",
+        guest_name: "Salma Raad",
+        current_check_in: "2026-06-05",
+        requested_check_in: "2026-06-07",
+        nights: 2,
+      },
+      "Fixed missing guest name",
+    );
+
+    expect(result.event.review_queue_items[0]?.status).toBe("resolved");
+    expect(result.event.review_queue_items[0]?.resolved_at).toBeTruthy();
+    expect(result.event.review_queue_items[0]?.resolution_notes).toBe(
+      "Fixed missing guest name",
+    );
+  });
+
+  it("Generated guest actions appear after reprocess", async () => {
+    const initial = await processIncomingEvent({
+      source_event_id: "guest-reprocess-003",
+      source: "guestops",
+      event_type: "reservation.change_requested",
+      payload: {
+        reservation_id: "RES-9910",
+        requested_check_in: "2026-06-12",
+      },
+    });
+
+    const reviewItem = initial.event.review_queue_items[0];
+
+    const result = await reprocessReviewItem(
+      reviewItem.id,
+      {
+        reservation_id: "RES-9910",
+        guest_name: "Maya Haddad",
+        current_check_in: "2026-06-10",
+        requested_check_in: "2026-06-12",
+        nights: 3,
+      },
+      "Added missing guest details",
+    );
+
+    expect(result.event.actions).toHaveLength(2);
+    expect(result.event.actions.map((action) => action.type)).toEqual([
+      "request_reservation_change",
+      "generate_guest_message",
+    ]);
+  });
+
+  it("Audit logs include operator reprocessing messages", async () => {
+    const initial = await processIncomingEvent({
+      source_event_id: "guest-reprocess-004",
+      source: "guestops",
+      event_type: "reservation.change_requested",
+      payload: {
+        reservation_id: "RES-1200",
+        requested_check_in: "2026-06-15",
+      },
+    });
+
+    const reviewItem = initial.event.review_queue_items[0];
+
+    const result = await reprocessReviewItem(
+      reviewItem.id,
+      {
+        reservation_id: "RES-1200",
+        guest_name: "Dana Nader",
+        current_check_in: "2026-06-13",
+        requested_check_in: "2026-06-15",
+        nights: 2,
+      },
+      "Fixed missing guest name",
+    );
+
+    const messages = result.event.audit_logs.map((log) => log.message);
+
+    expect(messages).toContain("Operator edited payload for reprocessing");
+    expect(messages).toContain("Review item resolved after successful reprocessing");
   });
 });
