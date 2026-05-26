@@ -4,21 +4,30 @@ type StatusBadgeProps = {
 };
 
 const styles: Record<string, string> = {
-  completed: "border-[#bbf7d0] bg-[#f0fdf4] text-[#15803d]",
-  resolved: "border-[#bbf7d0] bg-[#f0fdf4] text-[#15803d]",
-  review_required: "border-[#fde68a] bg-[#fffbeb] text-[#b45309]",
-  failed: "border-[#fecaca] bg-[#fef2f2] text-[#b91c1c]",
-  processing: "border-[#bfdbfe] bg-[#eff6ff] text-[#1d4ed8]",
-  received: "border-[#e5e7eb] bg-[#f3f4f6] text-[#6b7280]",
+  completed: "border-[var(--success-bg)] bg-[var(--success-bg)] text-[var(--success-text)]",
+  resolved: "border-[var(--success-bg)] bg-[var(--success-bg)] text-[var(--success-text)]",
+  review_required: "border-[var(--warning-bg)] bg-[var(--warning-bg)] text-[var(--warning-text)]",
+  failed: "border-[var(--error-bg)] bg-[var(--error-bg)] text-[var(--error-text)]",
+  processing: "border-[var(--primary-soft)] bg-[var(--primary-soft)] text-[var(--primary)]",
+  received: "border-[var(--neutral-bg)] bg-[var(--neutral-bg)] text-[var(--neutral-text)]",
 };
 
 const dots: Record<string, string> = {
-  completed: "bg-[#3fb950]",
-  resolved: "bg-[#3fb950]",
-  review_required: "bg-[#d29922]",
-  failed: "bg-[#f85149]",
-  processing: "bg-[#58a6ff]",
-  received: "bg-[#9ca3af]",
+  completed: "bg-[var(--success-text)]",
+  resolved: "bg-[var(--success-text)]",
+  review_required: "bg-[var(--warning-text)]",
+  failed: "bg-[var(--error-text)]",
+  processing: "bg-[var(--primary)]",
+  received: "bg-[var(--neutral-text)]",
+};
+
+const labels: Record<string, string> = {
+  completed: "DONE",
+  resolved: "DONE",
+  review_required: "REVIEW",
+  failed: "FAILED",
+  processing: "PROCESSING",
+  received: "RECEIVED",
 };
 
 export default function StatusBadge({
@@ -29,10 +38,10 @@ export default function StatusBadge({
 
   return (
     <span
-      className={`inline-flex items-center gap-2 rounded-full border px-2.5 py-1 text-xs font-medium lowercase ${styles[key]} ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded-full border-[0.5px] px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.06em] ${styles[key]} ${className}`}
     >
-      <span className={`h-2 w-2 rounded-full ${dots[key]}`} />
-      {status}
+      <span className={`h-1.5 w-1.5 rounded-full ${dots[key]}`} />
+      {labels[key] ?? status}
     </span>
   );
 }

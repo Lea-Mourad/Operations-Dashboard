@@ -4,15 +4,48 @@
 
 :root {
   color-scheme: light;
-  --page-bg: #f6f5f2;
+  --page-bg: #f7f8fb;
   --surface: #ffffff;
-  --surface-muted: #fbfaf7;
-  --sidebar-bg: #fbfaf7;
-  --border: #e9e5dc;
-  --text: #171717;
-  --text-secondary: #66645f;
-  --text-muted: #a29d93;
-  --primary: #2563eb;
+  --surface-muted: #f7f9fc;
+  --sidebar-bg: #ffffff;
+  --border: #d9e1ea;
+  --text: #17202b;
+  --text-secondary: #546170;
+  --text-muted: #7e8a98;
+  --primary: #185fa5;
+  --primary-soft: #e6f1fb;
+  --success-bg: #eaf3de;
+  --success-text: #3b6d11;
+  --warning-bg: #faeeda;
+  --warning-text: #854f0b;
+  --error-bg: #fcebeb;
+  --error-text: #a32d2d;
+  --neutral-bg: #f1f4f8;
+  --neutral-text: #667484;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --page-bg: #10161f;
+    --surface: #161d27;
+    --surface-muted: #1b2430;
+    --sidebar-bg: #141b24;
+    --border: #2c3948;
+    --text: #eef4fb;
+    --text-secondary: #b5c0cc;
+    --text-muted: #8e9aaa;
+    --primary: #69a8e5;
+    --primary-soft: #17324f;
+    --success-bg: #20311a;
+    --success-text: #a6d07d;
+    --warning-bg: #342712;
+    --warning-text: #efc57a;
+    --error-bg: #35191c;
+    --error-text: #f0a5a5;
+    --neutral-bg: #1d2632;
+    --neutral-text: #a4b1c0;
+  }
 }
 
 * {
@@ -25,7 +58,7 @@ html {
 
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: var(--font-syne), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background: var(--page-bg);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
@@ -47,28 +80,28 @@ textarea {
 input,
 select,
 textarea {
-  background: #ffffff;
-  border: 1px solid #ddd8cf;
-  border-radius: 10px;
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: 12px;
   color: var(--text);
 }
 
 input:focus,
 select:focus,
 textarea:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px #2563eb1a;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 14%, transparent);
   outline: none;
 }
 
 ::placeholder {
-  color: #9ca3af;
+  color: var(--text-muted);
 }
 
 button {
   transition:
     background-color 160ms ease,
     border-color 160ms ease,
-    box-shadow 160ms ease,
-    transform 160ms ease;
+    color 160ms ease,
+    box-shadow 160ms ease;
 }

@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
+import { Syne } from "next/font/google";
 import "./globals.css";
 
 import AppShell from "@/components/AppShell";
+
+const syne = Syne({
+  subsets: ["latin"],
+  variable: "--font-syne",
+  weight: ["400", "500", "600", "700"],
+});
 
 export const metadata: Metadata = {
   title: "Operations Command Center",
@@ -15,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className={syne.variable}>
         <AppShell>{children}</AppShell>
       </body>
     </html>

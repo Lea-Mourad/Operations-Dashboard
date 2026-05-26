@@ -117,31 +117,31 @@ export default function DashboardPage() {
   }, [state.events]);
 
   return (
-    <div className="space-y-8">
-      <section className="rounded-[24px] border border-[var(--border)] bg-white p-8 shadow-[0_14px_34px_-30px_rgba(15,23,42,0.9)]">
+    <div className="space-y-6">
+      <section className="rounded-[12px] border-[0.5px] border-[var(--border)] bg-[var(--surface)] px-4 py-5 md:px-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--text-muted)]">
               Operations
             </p>
-            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-[var(--text)]">
+            <h1 className="mt-2 text-[22px] font-bold tracking-[-0.5px] text-[var(--text)]">
               Operations overview
             </h1>
-            <p className="mt-4 max-w-2xl text-[15px] leading-7 text-[var(--text-secondary)]">
+            <p className="mt-2 max-w-2xl text-[12px] font-medium leading-5 text-[var(--text-secondary)]">
               See recent activity, check outcomes, and step in only when something needs attention.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Link href="/submit" className="rounded-full bg-[#2563eb] px-5 py-2.5 text-sm font-medium text-white shadow-[0_12px_24px_-18px_rgba(37,99,235,0.9)]">
+            <Link href="/submit" className="rounded-[10px] bg-[var(--primary)] px-4 py-2 text-[12px] font-semibold text-white">
               Submit event
             </Link>
-            <Link href="/events" className="rounded-full border border-[#d8d2c7] bg-white px-5 py-2.5 text-sm font-medium text-[var(--text)]">
+            <Link href="/events" className="rounded-[10px] border-[0.5px] border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-[12px] font-semibold text-[var(--text)]">
               Open inbox
             </Link>
           </div>
         </div>
         {state.error ? (
-          <div className="mt-4 rounded-[10px] border border-[#fecaca] bg-[#fef2f2] px-4 py-3 text-sm text-[#b91c1c]">
+          <div className="mt-4 rounded-[12px] border-[0.5px] border-[var(--error-bg)] bg-[var(--error-bg)] px-4 py-3 text-[12px] font-medium text-[var(--error-text)]">
             {state.error}
           </div>
         ) : null}
@@ -176,21 +176,21 @@ export default function DashboardPage() {
 
       <section className="grid gap-4 lg:grid-cols-3">
         <SimpleStep
-          number="1"
+          number="01"
           title="Send an event"
           body="Start from the submit page and use the prefilled forms to send a new event."
           href="/submit"
           linkLabel="Open Submit Event"
         />
         <SimpleStep
-          number="2"
+          number="02"
           title="Check the outcome"
           body="The inbox shows whether an event completed, failed, or needs review. Open any event to see what happened."
           href="/events"
           linkLabel="Open Event Inbox"
         />
         <SimpleStep
-          number="3"
+          number="03"
           title="Fix blocked items"
           body="If something cannot be handled safely, it lands in the review queue where you can fix and reprocess it."
           href="/reviews"
@@ -199,15 +199,15 @@ export default function DashboardPage() {
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[1.35fr_0.95fr]">
-        <div className="rounded-[24px] border border-[var(--border)] bg-white p-6 shadow-[0_14px_34px_-30px_rgba(15,23,42,0.9)]">
+        <div className="rounded-[12px] border-[0.5px] border-[var(--border)] bg-[var(--surface)] p-[14px]">
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--text-muted)]">
                 Recent events
               </p>
-              <h2 className="mt-2 text-xl font-semibold text-[var(--text)]">Recent activity</h2>
+              <h2 className="mt-1 text-[18px] font-bold tracking-[-0.3px] text-[var(--text)]">Recent activity</h2>
             </div>
-            <span className="rounded-full border border-[var(--border)] bg-[var(--surface-muted)] px-3 py-1.5 text-xs text-[var(--text-secondary)]">
+            <span className="rounded-full border-[0.5px] border-[var(--border)] bg-[var(--surface-muted)] px-3 py-1.5 text-[11px] font-medium text-[var(--text-secondary)]">
               {totalActions} actions generated
             </span>
           </div>
@@ -221,11 +221,11 @@ export default function DashboardPage() {
                 header: "Source",
                 cell: (event) => (
                   <div>
-                    <div className="font-medium text-[var(--text)]">{getWorkflowLabel(event)}</div>
-                    <code className="mt-1 inline-flex rounded bg-[#f3f4f6] px-2 py-1 font-mono text-xs text-[var(--text-secondary)]">
+                    <div className="text-[12px] font-semibold text-[var(--text)]">{getWorkflowLabel(event)}</div>
+                    <code className="mt-1 inline-flex rounded-[8px] bg-[var(--surface-muted)] px-2 py-1 font-mono text-[11px] text-[var(--text-secondary)]">
                       {event.source_event_id}
                     </code>
-                    <div className="mt-2 text-sm text-[var(--text-secondary)]">
+                    <div className="mt-2 text-[12px] font-medium text-[var(--text-secondary)]">
                       {getEventOverview(event)}
                     </div>
                   </div>
@@ -234,7 +234,7 @@ export default function DashboardPage() {
               {
                 key: "type",
                 header: "Event type",
-                cell: (event) => <span className="text-[var(--text)]">{event.event_type}</span>,
+                cell: (event) => <span className="text-[12px] font-medium text-[var(--text)]">{event.event_type}</span>,
               },
               {
                 key: "status",
@@ -250,7 +250,7 @@ export default function DashboardPage() {
                 key: "detail",
                 header: "Detail",
                 cell: (event) => (
-                  <Link href={`/events/${event.id}`} className="font-medium text-[#2563eb]">
+                  <Link href={`/events/${event.id}`} className="text-[12px] font-semibold text-[var(--primary)]">
                     Open
                   </Link>
                 ),
@@ -260,33 +260,33 @@ export default function DashboardPage() {
         </div>
 
         <div className="space-y-6">
-          <div className="rounded-[24px] border border-[var(--border)] bg-white p-6 shadow-[0_14px_34px_-30px_rgba(15,23,42,0.9)]">
+          <div className="rounded-[12px] border-[0.5px] border-[var(--border)] bg-[var(--surface)] p-[14px]">
             <div className="mb-4 flex items-center justify-between gap-3">
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--text-muted)]">
                   Review queue
                 </p>
-                <h2 className="mt-2 text-xl font-semibold text-[var(--text)]">Needs attention</h2>
+                <h2 className="mt-1 text-[18px] font-bold tracking-[-0.3px] text-[var(--text)]">Needs attention</h2>
               </div>
-              <Link href="/reviews" className="text-sm font-medium text-[#2563eb]">
+              <Link href="/reviews" className="text-[12px] font-semibold text-[var(--primary)]">
                 Manage queue
               </Link>
             </div>
             <div className="space-y-3">
               {state.reviewItems.slice(0, 3).map((item) => (
-                <div key={item.id} className="rounded-[18px] border border-[var(--border)] bg-[var(--surface-muted)] p-4">
+                <div key={item.id} className="rounded-[12px] border-[0.5px] border-[var(--border)] bg-[var(--surface)] p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="text-sm font-medium text-[var(--text)]">
+                      <p className="text-[12px] font-semibold text-[var(--text)]">
                         {getWorkflowLabel({
                           source: item.event.source,
                           event_type: item.event.event_type,
                         })}
                       </p>
-                      <p className="mt-1 text-sm text-[var(--text-secondary)]">
+                      <p className="mt-1 text-[12px] font-medium text-[var(--text-secondary)]">
                         {item.reason}
                       </p>
-                      <code className="mt-2 inline-flex rounded bg-white px-2 py-1 font-mono text-xs text-[var(--text-secondary)]">
+                      <code className="mt-2 inline-flex rounded-[8px] bg-[var(--surface-muted)] px-2 py-1 font-mono text-[11px] text-[var(--text-secondary)]">
                         {item.event.source_event_id}
                       </code>
                     </div>
@@ -295,24 +295,19 @@ export default function DashboardPage() {
                 </div>
               ))}
               {state.reviewItems.length === 0 ? (
-                <div className="rounded-[18px] border border-dashed border-[var(--border)] bg-[var(--surface-muted)] px-4 py-8 text-sm text-[var(--text-secondary)]">
+                <div className="rounded-[12px] border-[0.5px] border-dashed border-[var(--border)] bg-[var(--surface-muted)] px-4 py-8 text-[12px] font-medium text-[var(--text-secondary)]">
                   No review items are currently open.
                 </div>
               ) : null}
             </div>
           </div>
 
-          <div className="rounded-[24px] border border-[var(--border)] bg-white p-6 shadow-[0_14px_34px_-30px_rgba(15,23,42,0.9)]">
-            <div className="mb-4 flex items-center justify-between gap-3">
-              <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
-                  Recent audit
-                </p>
-                <h2 className="mt-2 text-xl font-semibold text-[var(--text)]">Latest workflow activity</h2>
-              </div>
-              <Link href="/audit" className="text-sm font-medium text-[#2563eb]">
-                Full audit trail
-              </Link>
+          <div className="rounded-[12px] border-[0.5px] border-[var(--border)] bg-[var(--surface)] p-[14px]">
+            <div className="mb-4">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--text-muted)]">
+                Recent activity
+              </p>
+              <h2 className="mt-1 text-[18px] font-bold tracking-[-0.3px] text-[var(--text)]">Latest workflow updates</h2>
             </div>
             <AuditTimeline items={recentAudit} />
           </div>
@@ -336,16 +331,15 @@ function SimpleStep({
   linkLabel: string;
 }) {
   return (
-    <section className="rounded-[20px] border border-[var(--border)] bg-white p-6 shadow-[0_10px_26px_-26px_rgba(15,23,42,0.9)]">
-      <div className="flex items-center gap-3">
-        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--surface-muted)] text-sm font-semibold text-[var(--text)]">
-          {number}
-        </span>
-        <h2 className="text-lg font-semibold text-[var(--text)]">{title}</h2>
-      </div>
-      <p className="mt-4 text-sm leading-6 text-[var(--text-secondary)]">{body}</p>
-      <Link href={href} className="mt-4 inline-flex text-sm font-medium text-[#2563eb]">
-        {linkLabel}
+    <section className="rounded-[12px] border-[0.5px] border-[var(--border)] bg-[var(--surface)] p-[14px]">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--text-muted)]">
+        Step {number}
+      </p>
+      <h2 className="mt-3 text-[18px] font-bold leading-6 tracking-[-0.3px] text-[var(--text)]">{title}</h2>
+      <p className="mt-3 text-[12px] font-medium leading-6 text-[var(--text-secondary)]">{body}</p>
+      <Link href={href} className="mt-5 inline-flex items-center gap-2 text-[12px] font-semibold text-[var(--primary)]">
+        <span>{linkLabel}</span>
+        <span aria-hidden="true">→</span>
       </Link>
     </section>
   );

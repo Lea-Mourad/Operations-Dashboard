@@ -80,15 +80,15 @@ export default function SubmitEventPage() {
   }
 
   return (
-    <div className="space-y-8">
-      <section className="rounded-[24px] border border-[var(--border)] bg-white p-8 shadow-[0_14px_34px_-30px_rgba(15,23,42,0.9)]">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
+    <div className="space-y-6">
+      <section className="rounded-[12px] border-[0.5px] border-[var(--border)] bg-[var(--surface)] px-4 py-5 md:px-5">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--text-muted)]">
           Submit Event
         </p>
-        <h1 className="mt-3 text-4xl font-semibold tracking-tight text-[var(--text)]">
+        <h1 className="mt-2 text-[22px] font-bold tracking-[-0.5px] text-[var(--text)]">
           Create a new event
         </h1>
-        <p className="mt-4 max-w-2xl text-[15px] leading-7 text-[var(--text-secondary)]">
+        <p className="mt-2 max-w-2xl text-[12px] font-medium leading-5 text-[var(--text-secondary)]">
           Pick a workflow, fill in the fields, and submit. You will see the result right away, and JSON mode is still there for edge cases.
         </p>
       </section>
@@ -99,9 +99,9 @@ export default function SubmitEventPage() {
         <MiniStep number="3" title="Review the result" body="After submit, you’ll see the status, actions, and next step." />
       </section>
 
-      <div className="grid gap-6 xl:grid-cols-[280px_1fr]">
-        <section className="rounded-[20px] border border-[var(--border)] bg-white p-5 shadow-[0_10px_26px_-26px_rgba(15,23,42,0.9)]">
-          <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
+      <div className="grid gap-5 xl:grid-cols-[260px_1fr]">
+        <section className="rounded-[12px] border-[0.5px] border-[var(--border)] bg-[var(--surface)] p-4">
+          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--text-muted)]">
             Choose a workflow
           </p>
           <div className="grid gap-2">
@@ -113,25 +113,25 @@ export default function SubmitEventPage() {
                   key={tab.key}
                   type="button"
                   onClick={() => setActiveTab(tab.key)}
-                  className={`rounded-[10px] border px-4 py-3 text-left transition ${
+                  className={`rounded-[10px] border-[0.5px] px-3 py-3 text-left transition ${
                     active
-                      ? "border-[#bfdbfe] bg-[#eff6ff] text-[#1d4ed8]"
-                      : "border-[var(--border)] bg-white text-[var(--text-secondary)] hover:bg-[#f9fafb]"
+                      ? "border-[var(--primary)] bg-[var(--primary-soft)] text-[var(--primary)]"
+                      : "border-[var(--border)] bg-[var(--surface)] text-[var(--text-secondary)] hover:bg-[var(--surface-muted)]"
                   }`}
                 >
-                  <p className="text-sm font-medium">{tab.title}</p>
-                  <p className="mt-1 text-xs">{tab.subtitle}</p>
+                  <p className="text-[13px] font-semibold">{tab.title}</p>
+                  <p className="mt-1 text-[11px] font-medium">{tab.subtitle}</p>
                 </button>
               );
             })}
           </div>
-          <div className="mt-4 rounded-[14px] border border-[var(--border)] bg-[var(--surface-muted)] p-4 text-sm text-[var(--text-secondary)]">
+          <div className="mt-4 rounded-[12px] border-[0.5px] border-[var(--border)] bg-[var(--surface-muted)] p-4 text-[12px] font-medium text-[var(--text-secondary)]">
             Tip: the default values let you submit a working example right away.
           </div>
         </section>
 
         <div className="space-y-6">
-          <section className="rounded-[24px] border border-[var(--border)] bg-white p-6 shadow-[0_14px_34px_-30px_rgba(15,23,42,0.9)]">
+          <section className="rounded-[12px] border-[0.5px] border-[var(--border)] bg-[var(--surface)] p-4 md:p-5">
             {activeTab === "finance" ? (
               <FinanceForm
                 values={finance}
@@ -272,10 +272,10 @@ function CampaignForm({
         <TextField label="deadline" type="date" value={values.deadline} onChange={(value) => onChange({ ...values, deadline: value })} />
       </div>
       <div>
-        <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">channels</p>
+        <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--text-muted)]">channels</p>
         <div className="grid gap-3 md:grid-cols-2">
           {channels.map((channel) => (
-            <label key={channel} className="flex items-center gap-3 rounded-[7px] border border-[#d1d5db] bg-white px-3 py-2.5 text-sm text-[var(--text)]">
+            <label key={channel} className="flex items-center gap-3 rounded-[10px] border-[0.5px] border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[12px] font-medium text-[var(--text)]">
               <input
                 type="checkbox"
                 checked={values.channels.includes(channel)}
@@ -344,11 +344,11 @@ function AdvancedJsonForm({
       description="Use raw JSON only for edge cases or backend demos. Most normal testing should go through the guided forms."
     >
       <label className="block">
-        <span className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">Raw event JSON</span>
+        <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--text-muted)]">Raw event JSON</span>
         <textarea
           value={value}
           onChange={(event) => onChange(event.target.value)}
-          className="min-h-[340px] w-full bg-[#f9fafb] p-4 font-mono text-sm"
+          className="min-h-[340px] w-full rounded-[12px] border-[0.5px] border-[var(--border)] bg-[var(--surface-muted)] p-4 font-mono text-[12px]"
         />
       </label>
       <PrimaryButton onClick={onSubmit} loading={loading} label="Submit advanced JSON event" />
@@ -359,24 +359,24 @@ function AdvancedJsonForm({
 function SubmissionResult({ state }: { state: SubmitState }) {
   if (state.loading) {
     return (
-      <section className="rounded-[10px] border border-[var(--border)] bg-white p-5">
-        <p className="text-sm text-[var(--text-secondary)]">Submitting event...</p>
+      <section className="rounded-[12px] border-[0.5px] border-[var(--border)] bg-[var(--surface)] p-4">
+        <p className="text-[12px] font-medium text-[var(--text-secondary)]">Submitting event...</p>
       </section>
     );
   }
 
   if (state.error) {
     return (
-      <section className="rounded-[10px] border border-[#fecaca] bg-[#fef2f2] p-5">
-        <p className="text-sm font-medium text-[#b91c1c]">{state.error}</p>
+      <section className="rounded-[12px] border-[0.5px] border-[var(--error-bg)] bg-[var(--error-bg)] p-4">
+        <p className="text-[12px] font-semibold text-[var(--error-text)]">{state.error}</p>
       </section>
     );
   }
 
   if (!state.result) {
     return (
-      <section className="rounded-[10px] border border-[var(--border)] bg-white p-5">
-        <p className="text-sm text-[var(--text-secondary)]">
+      <section className="rounded-[12px] border-[0.5px] border-[var(--border)] bg-[var(--surface)] p-4">
+        <p className="text-[12px] font-medium text-[var(--text-secondary)]">
           Your result will appear here after you submit an event.
         </p>
       </section>
@@ -386,13 +386,13 @@ function SubmissionResult({ state }: { state: SubmitState }) {
   const event = state.result.event;
 
   return (
-    <section className="rounded-[10px] border border-[var(--border)] bg-white p-5">
+    <section className="rounded-[12px] border-[0.5px] border-[var(--border)] bg-[var(--surface)] p-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--text-muted)]">
             Submission result
           </p>
-          <h2 className="mt-1 text-lg font-semibold text-[var(--text)]">
+          <h2 className="mt-1 text-[18px] font-bold tracking-[-0.3px] text-[var(--text)]">
             {state.result.duplicate ? "We found the existing event" : "Your event was received"}
           </h2>
         </div>
@@ -404,22 +404,22 @@ function SubmissionResult({ state }: { state: SubmitState }) {
         <ResultStat label="Actions" value={String(event.actions.length)} />
       </div>
       {event.review_queue_items[0] ? (
-        <div className="mt-4 rounded-[10px] border border-[#fde68a] bg-[#fffbeb] px-4 py-3">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#b45309]">
+        <div className="mt-4 rounded-[12px] border-[0.5px] border-[var(--warning-bg)] bg-[var(--warning-bg)] px-4 py-3">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--warning-text)]">
             Review reason
           </p>
-          <p className="mt-2 text-sm text-[#b45309]">
+          <p className="mt-2 text-[12px] font-medium text-[var(--warning-text)]">
             {event.review_queue_items[0].reason}
           </p>
         </div>
       ) : null}
       <div className="mt-4">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--text-muted)]">
           Generated actions
         </p>
         <div className="mt-3 space-y-3">
           {event.actions.length === 0 ? (
-            <div className="rounded-[10px] border border-dashed border-[var(--border)] bg-[#fafafa] px-4 py-5 text-sm text-[var(--text-secondary)]">
+            <div className="rounded-[12px] border-[0.5px] border-dashed border-[var(--border)] bg-[var(--surface-muted)] px-4 py-5 text-[12px] font-medium text-[var(--text-secondary)]">
               No actions were generated for this submission.
             </div>
           ) : (
@@ -429,15 +429,15 @@ function SubmissionResult({ state }: { state: SubmitState }) {
               return (
                 <div
                   key={action.id}
-                  className="rounded-[10px] border border-[var(--border)] bg-[#f9fafb] p-4"
+                  className="rounded-[12px] border-[0.5px] border-[var(--border)] bg-[var(--surface-muted)] p-4"
                 >
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div>
-                      <h3 className="text-sm font-semibold text-[var(--text)]">
+                      <h3 className="text-[13px] font-semibold text-[var(--text)]">
                         {actionDisplay.title}
                       </h3>
                       {actionDisplay.message ? (
-                        <p className="mt-1 text-sm text-[var(--text-secondary)]">
+                        <p className="mt-1 text-[12px] font-medium text-[var(--text-secondary)]">
                           {actionDisplay.message}
                         </p>
                       ) : null}
@@ -460,10 +460,10 @@ function SubmissionResult({ state }: { state: SubmitState }) {
         </div>
       </div>
       <div className="mt-4 flex flex-wrap gap-2">
-        <Link href={`/events/${event.id}`} className="rounded-[7px] bg-[#2563eb] px-4 py-2 text-sm font-medium text-white">
+        <Link href={`/events/${event.id}`} className="rounded-[10px] bg-[var(--primary)] px-4 py-2 text-[12px] font-semibold text-white">
           Open event detail
         </Link>
-        <Link href="/events" className="rounded-[7px] border border-[#d1d5db] bg-white px-4 py-2 text-sm font-medium text-[var(--text)]">
+        <Link href="/events" className="rounded-[10px] border-[0.5px] border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-[12px] font-semibold text-[var(--text)]">
           Go to inbox
         </Link>
       </div>
@@ -483,11 +483,11 @@ function FormLayout({
   return (
     <div className="space-y-5">
       <div>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--text-muted)]">
           Current form
         </p>
-        <h2 className="mt-1 text-xl font-semibold text-[var(--text)]">{title}</h2>
-        <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--text-secondary)]">{description}</p>
+        <h2 className="mt-1 text-[18px] font-bold tracking-[-0.3px] text-[var(--text)]">{title}</h2>
+        <p className="mt-2 max-w-3xl text-[12px] font-medium leading-6 text-[var(--text-secondary)]">{description}</p>
       </div>
       {children}
     </div>
@@ -504,14 +504,12 @@ function MiniStep({
   body: string;
 }) {
   return (
-    <section className="rounded-[18px] border border-[var(--border)] bg-white p-5 shadow-[0_10px_26px_-26px_rgba(15,23,42,0.9)]">
-      <div className="flex items-center gap-3">
-        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--surface-muted)] text-sm font-semibold text-[var(--text)]">
-          {number}
-        </span>
-        <h2 className="text-base font-semibold text-[var(--text)]">{title}</h2>
-      </div>
-      <p className="mt-3 text-sm leading-6 text-[var(--text-secondary)]">{body}</p>
+    <section className="rounded-[12px] border-[0.5px] border-[var(--border)] bg-[var(--surface)] p-[14px]">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--text-muted)]">
+        Step 0{number}
+      </p>
+      <h2 className="mt-3 text-[18px] font-bold leading-6 tracking-[-0.3px] text-[var(--text)]">{title}</h2>
+      <p className="mt-3 text-[12px] font-medium leading-6 text-[var(--text-secondary)]">{body}</p>
     </section>
   );
 }
@@ -529,8 +527,8 @@ function TextField({
 }) {
   return (
     <label className="block">
-      <span className="mb-2 block text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">{label}</span>
-      <input type={type} value={value} onChange={(event) => onChange(event.target.value)} className="w-full px-3 py-2.5 text-sm" />
+      <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--text-muted)]">{label}</span>
+      <input type={type} value={value} onChange={(event) => onChange(event.target.value)} className="w-full px-3 py-2.5 text-[12px] font-medium" />
     </label>
   );
 }
@@ -545,7 +543,7 @@ function CheckboxField({
   onChange: (checked: boolean) => void;
 }) {
   return (
-    <label className="flex items-center gap-3 rounded-[7px] border border-[#d1d5db] bg-white px-3 py-2.5 text-sm text-[var(--text)]">
+    <label className="flex items-center gap-3 rounded-[10px] border-[0.5px] border-[var(--border)] bg-[var(--surface)] px-3 py-2.5 text-[12px] font-medium text-[var(--text)]">
       <input type="checkbox" checked={checked} onChange={(event) => onChange(event.target.checked)} />
       <span>{label}</span>
     </label>
@@ -566,7 +564,7 @@ function PrimaryButton({
       type="button"
       disabled={loading}
       onClick={onClick}
-      className="rounded-[7px] bg-[#2563eb] px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+      className="rounded-[10px] bg-[var(--primary)] px-4 py-2 text-[12px] font-semibold text-white disabled:opacity-60"
     >
       {loading ? "Submitting..." : label}
     </button>
@@ -575,9 +573,9 @@ function PrimaryButton({
 
 function ResultStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[10px] border border-[var(--border)] bg-[#f9fafb] p-4">
-      <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">{label}</p>
-      <p className="mt-2 text-sm font-medium text-[var(--text)]">{value}</p>
+    <div className="rounded-[12px] border-[0.5px] border-[var(--border)] bg-[var(--surface-muted)] p-4">
+      <p className="text-[10px] font-semibold uppercase tracking-[0.08em] text-[var(--text-muted)]">{label}</p>
+      <p className="mt-2 text-[12px] font-semibold text-[var(--text)]">{value}</p>
     </div>
   );
 }

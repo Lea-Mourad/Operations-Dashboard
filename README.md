@@ -1,69 +1,78 @@
 # Operations Command Center
 
-This is my take-home submission for the Operations Command Center prompt.
+This is my take-home submission for the Operations Command Center exercise.
 
-I built it as a small operations app with a separate frontend and backend:
-- `src/frontend` holds the Next.js UI
-- `src/backend` holds the Express API
+I structured it as a separated frontend and backend:
+- `src/frontend` contains the Next.js app
+- `src/backend` contains the Express API
 - Prisma + SQLite handle persistence
 
-The core idea is a shared workflow engine with stream-specific adapters, so FinanceOps, CampaignOps, and GuestOps all go through the same processing flow instead of being treated as unrelated forms.
+The main architectural choice was using one shared workflow engine with stream-specific adapters, instead of building three unrelated flows.
 
-## What the app does
+## What it does
 
-- accepts events from FinanceOps, CampaignOps, and GuestOps
-- validates the incoming shape and required fields
-- routes each event to the correct workflow adapter
-- generates actions based on the event type
+The app accepts events from:
+- FinanceOps
+- CampaignOps
+- GuestOps
+
+For each event, it:
+- validates the top-level shape and payload fields
+- detects the right workflow
+- generates actions
 - runs mock external services
-- writes events, actions, review items, and audit logs to SQLite
-- prevents duplicate processing by `source_event_id`
-- sends unsupported or incomplete events to the review queue
+- stores events, actions, review items, and audit history
+- prevents duplicate processing with `source_event_id`
+- routes unsafe or incomplete events to human review
 
-## Main screens
+## Required pages
 
-- `Dashboard` for the high-level view
-- `Submit Event` for guided event submission
-- `Event Inbox` for all saved events
-- `Review Queue` for blocked items that need operator input
-- `Audit Trail` for event history
-- `Event Detail` for the full record of one event
+The UI is focused on the 5 required pages:
+- `Dashboard`
+- `Submit Event`
+- `Event Inbox`
+- `Event Detail`
+- `Review Queue`
+
+There is no standalone Audit Trail page anymore. Audit history still exists, but it now appears where it is actually useful:
+- recent activity on the dashboard
+- the timeline inside each event detail page
 
 ## Workflow coverage
 
 ### FinanceOps
-Supports `invoice.overdue`.
+Event type: `invoice.overdue`
 
-It creates:
-- a payment reminder
-- a follow-up task
+Creates:
+- `send_payment_reminder`
+- `create_follow_up_task`
 
-Priority is marked `high` when `days_overdue > 14`, otherwise `normal`.
+Priority becomes `high` when `days_overdue > 14`, otherwise `normal`.
 
 ### CampaignOps
-Supports `client_brief.received`.
+Event type: `client_brief.received`
 
-It creates one campaign task per channel and carries the deadline through to each task.
+Creates one task per channel and carries the deadline into each generated task.
 
 ### GuestOps
-Supports `reservation.change_requested`.
+Event type: `reservation.change_requested`
 
-It creates:
-- a reservation change action
-- a guest confirmation message
+Creates:
+- `request_reservation_change`
+- `generate_guest_message`
 
-If key reservation fields are missing, the event goes to review instead of being completed automatically.
+If required reservation fields are missing, the event goes to review instead of being auto-completed.
 
 ## Review and reprocessing
 
-If an event cannot be completed safely, it moves to the review queue.
+If an event cannot be completed safely, it goes into the review queue.
 
 From there, an operator can:
 - resolve it manually with notes
-- edit the payload
-- reprocess the same event without creating a duplicate record
+- edit the event payload
+- reprocess the same event without creating a duplicate
 
-When reprocessing succeeds, the event is completed, new actions are saved, and the review item is resolved. If it still cannot be completed, it stays in review with updated history.
+During reprocessing, existing valid values stay filled in and missing values stay blank so the operator can correct only what is missing.
 
 ## Running the project
 
@@ -73,23 +82,25 @@ Install dependencies:
 npm install
 ```
 
-Create or update the local database:
+Create or update the database:
 
 ```bash
 npx prisma migrate dev
 ```
 
-Start both apps:
+Start frontend and backend together:
 
 ```bash
 npm run dev
 ```
 
-URLs:
+Default URLs:
 - frontend: `http://localhost:3000`
 - backend: `http://localhost:4000`
 
-## Helpful commands
+If one of those ports is already in use, stop the old process first and run `npm run dev` again.
+
+## Useful commands
 
 Run frontend only:
 
@@ -123,12 +134,12 @@ npx prisma studio
 
 ## Data persistence
 
-App data is stored in:
+The local SQLite database lives at:
 
 `prisma/dev.db`
 
-I set it up so normal development keeps your data:
-- `npm run dev` does not clear the database
+Current behavior:
+- `npm run dev` keeps your data
 - `npm run db:seed` only adds sample records if they are missing
 - `npm test` preserves the local database by backing it up and restoring it after the test run
 
@@ -145,4 +156,6 @@ I set it up so normal development keeps your data:
 
 ## Notes
 
-I kept the backend logic and workflow behavior separate from the UI so the frontend only talks to the API. That made it easier to clean up the UX without changing how events are processed.
+The frontend only talks to the backend API. There are no Prisma or workflow engine imports in the client UI.
+
+I kept the data flow stable and moved most of the iteration into the UI layer so I could improve the operator experience without changing the workflow behavior underneath.
