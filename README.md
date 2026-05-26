@@ -1,8 +1,30 @@
 # Operations Command Center
 
-Operations Command Center is split into a dedicated Express backend and a Next.js frontend while preserving the existing workflow engine behavior, Prisma persistence, and UI flows.
+This is my take on the Operations Command Center assignment.
 
-## Architecture
+I built it as a separated frontend/backend app:
+- `Next.js` for the frontend
+- `Express` for the backend API
+- `Prisma + SQLite` for persistence
+
+The goal was to keep the workflow logic shared and adapter-based instead of building three unrelated flows.
+
+## What’s in the app
+
+- Dashboard
+- Submit Event
+- Event Inbox
+- Review Queue
+- Audit Trail
+- Event Detail view
+
+The backend currently handles:
+- FinanceOps overdue invoices
+- CampaignOps client briefs
+- GuestOps reservation change requests
+- review-required fallbacks for invalid, unsupported, or failed events
+
+## Project structure
 
 ```text
 src/
@@ -26,15 +48,37 @@ prisma/
 tests/
 ```
 
-- Frontend: Next.js App Router on `http://localhost:3000`
-- Backend: Express API on `http://localhost:4000`
-- Database: Prisma + SQLite
+A small root `app/` folder still exists because Next App Router expects it, but the actual frontend implementation lives under `src/frontend`.
 
-The root `app/` directory remains as a thin Next.js bridge because App Router requires it, but the actual UI implementation lives under `src/frontend`.
+## Run locally
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Set up the database:
+
+```bash
+npx prisma migrate dev
+```
+
+Start both frontend and backend:
+
+```bash
+npm run dev
+```
+
+Default ports:
+- Frontend: [http://localhost:3000](http://localhost:3000)
+- Backend: [http://localhost:4000](http://localhost:4000)
+
+If one of those ports is already in use, stop the old process first and rerun.
 
 ## Environment
 
-Create a local `.env` file from `.env.example` if needed:
+Use a local `.env` file like this:
 
 ```bash
 DATABASE_URL="file:./dev.db"
@@ -43,20 +87,7 @@ FRONTEND_URL="http://localhost:3000"
 NEXT_PUBLIC_API_URL="http://localhost:4000"
 ```
 
-## Install and Run
-
-```bash
-npm install
-npx prisma migrate dev
-npm run dev
-```
-
-That starts:
-
-- Frontend at [http://localhost:3000](http://localhost:3000)
-- Backend at [http://localhost:4000](http://localhost:4000)
-
-## Backend API
+## API routes
 
 - `POST /api/events/submit`
 - `GET /api/events`
@@ -64,9 +95,10 @@ That starts:
 - `GET /api/dashboard`
 - `GET /api/reviews`
 - `POST /api/reviews/:id/resolve`
+- `POST /api/reviews/:id/reprocess`
 - `GET /api/audit`
 
-## Useful Commands
+## Useful commands
 
 ```bash
 npm run db:push
@@ -75,13 +107,29 @@ npm test
 npm run build
 ```
 
+## Notes on persistence
+
+The app data lives in [prisma/dev.db](/Users/leamurad/mokeytribe assesment/prisma/dev.db).
+
+Important behavior:
+- `npm run dev` keeps existing data
+- `npm run db:seed` is non-destructive and only inserts the sample events if they are missing
+- `npm test` backs up and restores `prisma/dev.db`, so tests should not wipe app data
+
 ## Testing
 
-The workflow tests now run against the extracted backend service layer in `src/backend/services/workflowEngine.js`, preserving the original behavior checks:
+I added workflow tests around:
 
-1. FinanceOps event succeeds
-2. CampaignOps event succeeds
-3. GuestOps event succeeds
-4. Duplicate `source_event_id` is idempotent
-5. Missing required fields go to `review_required`
-6. Simulated external failure is auditable and routed to review
+1. successful FinanceOps processing
+2. successful CampaignOps processing
+3. successful GuestOps processing
+4. duplicate protection on `source_event_id`
+5. invalid payloads going to review
+6. failed mock execution staying auditable
+7. review queue reprocessing for corrected payloads
+
+## A couple of implementation choices
+
+- I kept Prisma as the persistence layer, but moved the request handling into a real Express backend instead of Next route handlers.
+- The workflow engine is still the center of the backend design. Each stream has its own adapter, but the intake / validation / persistence / audit flow is shared.
+- On the frontend, I tried to keep the UI more operator-friendly than developer-heavy, so raw JSON is mostly hidden behind detail sections instead of being the primary interface.

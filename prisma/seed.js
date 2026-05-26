@@ -40,11 +40,6 @@ const sampleEvents = [
 ];
 
 async function main() {
-  await prisma.auditLog.deleteMany();
-  await prisma.reviewQueueItem.deleteMany();
-  await prisma.action.deleteMany();
-  await prisma.event.deleteMany();
-
   for (const event of sampleEvents) {
     await processIncomingEvent(event);
   }

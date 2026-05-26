@@ -11,9 +11,9 @@ export default function AppShell({
   return (
     <div className="min-h-screen bg-[var(--page-bg)]">
       <Sidebar />
-      <div className="ml-[200px] min-h-screen">
+      <div className="ml-[216px] min-h-screen">
         <Topbar />
-        <main className="px-6 py-6">{children}</main>
+        <main className="px-8 py-8">{children}</main>
       </div>
     </div>
   );

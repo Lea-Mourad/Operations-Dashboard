@@ -68,20 +68,20 @@ export default function EventInboxPage() {
   }, [events, searchTerm, sourceFilter, statusFilter]);
 
   return (
-    <div className="space-y-6">
-      <section className="rounded-[10px] border border-[var(--border)] bg-white p-6">
+    <div className="space-y-8">
+      <section className="rounded-[24px] border border-[var(--border)] bg-white p-8 shadow-[0_14px_34px_-30px_rgba(15,23,42,0.9)]">
         <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
           Event Inbox
         </p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[var(--text)]">
-          Operational intake
+        <h1 className="mt-3 text-4xl font-semibold tracking-tight text-[var(--text)]">
+          A simpler event inbox
         </h1>
-        <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--text-secondary)]">
-          Filter by source and status, search by event identifier, and open any event for a full workflow inspection.
+        <p className="mt-4 max-w-2xl text-[15px] leading-7 text-[var(--text-secondary)]">
+          Browse incoming workflows, narrow the view with a few filters, and open the ones that need a closer look.
         </p>
       </section>
 
-      <section className="rounded-[10px] border border-[var(--border)] bg-white p-5">
+      <section className="rounded-[24px] border border-[var(--border)] bg-white p-6 shadow-[0_14px_34px_-30px_rgba(15,23,42,0.9)]">
         <div className="grid gap-4 lg:grid-cols-4">
           <ToolbarField label="Search">
             <input
@@ -118,7 +118,7 @@ export default function EventInboxPage() {
             </select>
           </ToolbarField>
           <ToolbarField label="Results">
-            <div className="rounded-[7px] border border-[var(--border)] bg-[#f9fafb] px-3 py-2.5 text-sm text-[var(--text-secondary)]">
+            <div className="rounded-[10px] border border-[var(--border)] bg-[var(--surface-muted)] px-3 py-2.5 text-sm text-[var(--text-secondary)]">
               {loading ? "Loading..." : `${filteredEvents.length} events`}
             </div>
           </ToolbarField>

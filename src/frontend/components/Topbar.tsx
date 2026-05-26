@@ -17,19 +17,19 @@ export default function Topbar() {
   const pageTitle = getPageTitle(pathname);
 
   return (
-    <header className="sticky top-0 z-20 flex h-[52px] items-center justify-between border-b border-[var(--border)] bg-white px-6">
+    <header className="sticky top-0 z-20 flex h-[64px] items-center justify-between border-b border-[var(--border)] bg-[rgba(246,245,242,0.88)] px-8 backdrop-blur-sm">
       <div className="flex items-center gap-2 text-sm">
         <span className="text-[var(--text-secondary)]">Operations</span>
         <span className="text-[var(--text-muted)]">/</span>
-        <span className="font-medium text-[#2563eb]">{pageTitle}</span>
+        <span className="font-medium text-[var(--text)]">{pageTitle}</span>
       </div>
 
       <div className="flex items-center gap-3 text-xs font-medium">
-        <span className="inline-flex items-center gap-2 rounded-full border border-[#bbf7d0] bg-[#f0fdf4] px-3 py-1 text-[#15803d]">
+        <span className="inline-flex items-center gap-2 rounded-full border border-[#d9edd8] bg-white px-3 py-1.5 text-[#15803d]">
           <span className="h-2 w-2 rounded-full bg-[#3fb950]" />
           API connected
         </span>
-        <span className="rounded-full border border-[var(--border)] bg-[#f9fafb] px-3 py-1 text-[var(--text-secondary)]">
+        <span className="rounded-full border border-[var(--border)] bg-white px-3 py-1.5 text-[var(--text-secondary)]">
           production
         </span>
       </div>

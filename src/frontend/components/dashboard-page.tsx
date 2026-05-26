@@ -117,25 +117,25 @@ export default function DashboardPage() {
   }, [state.events]);
 
   return (
-    <div className="space-y-6">
-      <section className="rounded-[10px] border border-[var(--border)] bg-white p-6">
+    <div className="space-y-8">
+      <section className="rounded-[24px] border border-[var(--border)] bg-white p-8 shadow-[0_14px_34px_-30px_rgba(15,23,42,0.9)]">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
               Operations Command Center
             </p>
-            <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[var(--text)]">
-              Live workflow dashboard
+            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-[var(--text)]">
+              A calmer view of daily operations
             </h1>
-            <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--text-secondary)]">
-              Monitor event intake, workflow completion, review pressure, and the latest audit activity across FinanceOps, CampaignOps, and GuestOps.
+            <p className="mt-4 max-w-2xl text-[15px] leading-7 text-[var(--text-secondary)]">
+              Keep an eye on workflow intake, exceptions, and recent activity without getting pulled into raw system detail unless you need it.
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Link href="/submit" className="rounded-[7px] bg-[#2563eb] px-4 py-2 text-sm font-medium text-white">
+            <Link href="/submit" className="rounded-full bg-[#2563eb] px-5 py-2.5 text-sm font-medium text-white shadow-[0_12px_24px_-18px_rgba(37,99,235,0.9)]">
               Submit event
             </Link>
-            <Link href="/events" className="rounded-[7px] border border-[#d1d5db] bg-white px-4 py-2 text-sm font-medium text-[var(--text)]">
+            <Link href="/events" className="rounded-full border border-[#d8d2c7] bg-white px-5 py-2.5 text-sm font-medium text-[var(--text)]">
               Open inbox
             </Link>
           </div>
@@ -174,16 +174,16 @@ export default function DashboardPage() {
         />
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-[1.4fr_0.9fr]">
-        <div className="rounded-[10px] border border-[var(--border)] bg-white p-5">
+      <section className="grid gap-6 xl:grid-cols-[1.35fr_0.95fr]">
+        <div className="rounded-[24px] border border-[var(--border)] bg-white p-6 shadow-[0_14px_34px_-30px_rgba(15,23,42,0.9)]">
           <div className="mb-4 flex items-center justify-between gap-3">
             <div>
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
                 Recent events
               </p>
-              <h2 className="mt-1 text-lg font-semibold text-[var(--text)]">Event intake snapshot</h2>
+              <h2 className="mt-2 text-xl font-semibold text-[var(--text)]">Recent activity</h2>
             </div>
-            <span className="rounded-full border border-[var(--border)] bg-[#f9fafb] px-3 py-1 text-xs text-[var(--text-secondary)]">
+            <span className="rounded-full border border-[var(--border)] bg-[var(--surface-muted)] px-3 py-1.5 text-xs text-[var(--text-secondary)]">
               {totalActions} actions generated
             </span>
           </div>
@@ -236,13 +236,13 @@ export default function DashboardPage() {
         </div>
 
         <div className="space-y-6">
-          <div className="rounded-[10px] border border-[var(--border)] bg-white p-5">
+          <div className="rounded-[24px] border border-[var(--border)] bg-white p-6 shadow-[0_14px_34px_-30px_rgba(15,23,42,0.9)]">
             <div className="mb-4 flex items-center justify-between gap-3">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
                   Review queue
                 </p>
-                <h2 className="mt-1 text-lg font-semibold text-[var(--text)]">Current queue load</h2>
+                <h2 className="mt-2 text-xl font-semibold text-[var(--text)]">Needs attention</h2>
               </div>
               <Link href="/reviews" className="text-sm font-medium text-[#2563eb]">
                 Manage queue
@@ -250,7 +250,7 @@ export default function DashboardPage() {
             </div>
             <div className="space-y-3">
               {state.reviewItems.slice(0, 3).map((item) => (
-                <div key={item.id} className="rounded-[10px] border border-[var(--border)] bg-[#fafafa] p-4">
+                <div key={item.id} className="rounded-[18px] border border-[var(--border)] bg-[var(--surface-muted)] p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="text-sm font-medium text-[var(--text)]">
@@ -271,20 +271,20 @@ export default function DashboardPage() {
                 </div>
               ))}
               {state.reviewItems.length === 0 ? (
-                <div className="rounded-[10px] border border-dashed border-[var(--border)] bg-[#fafafa] px-4 py-6 text-sm text-[var(--text-secondary)]">
+                <div className="rounded-[18px] border border-dashed border-[var(--border)] bg-[var(--surface-muted)] px-4 py-8 text-sm text-[var(--text-secondary)]">
                   No review items are currently open.
                 </div>
               ) : null}
             </div>
           </div>
 
-          <div className="rounded-[10px] border border-[var(--border)] bg-white p-5">
+          <div className="rounded-[24px] border border-[var(--border)] bg-white p-6 shadow-[0_14px_34px_-30px_rgba(15,23,42,0.9)]">
             <div className="mb-4 flex items-center justify-between gap-3">
               <div>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
                   Recent audit
                 </p>
-                <h2 className="mt-1 text-lg font-semibold text-[var(--text)]">Latest workflow activity</h2>
+                <h2 className="mt-2 text-xl font-semibold text-[var(--text)]">Latest workflow activity</h2>
               </div>
               <Link href="/audit" className="text-sm font-medium text-[#2563eb]">
                 Full audit trail
